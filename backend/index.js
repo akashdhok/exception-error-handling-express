@@ -3,7 +3,7 @@ const app = express()
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const Port = process.env.PORT || 8000
-
+const middleware = require("./middleware/middleware")
 require("dotenv").config()
 
 app.use(cors())
@@ -35,7 +35,7 @@ app.get("/about", (req, res) => {
         res.status(500).send({ msg: " about error" })
     }
 })
-app.get("/services", (req, res, next) => {
+app.get("/services",  (req, res, next) => {
    try {
     throw new Error("This is service page error using global middleware")
     res.status(200).send("Data from services")
@@ -45,11 +45,7 @@ app.get("/services", (req, res, next) => {
    }
 
 })
-//error middleware
-app.use((err, req, res, next) => {
-console.log(err.message)
-res.status(500).send({msg:"global middleware error handling"})
-})
+app.use(middleware)
 app.listen(Port, () => {
     console.log(`Listening at the port of ${Port}`)
 })
